@@ -43,6 +43,14 @@ const action: ActionDefinition<Settings, Payload> = {
       default: {
         '@path': '$.traits'
       }
+    },
+    created: {
+      label: 'Created At',
+      type: 'datetime',
+      description: 'User creation date',
+      default: {
+        '@path': '$.traits.createdAt'
+      }
     }
   },
 
@@ -79,9 +87,19 @@ const action: ActionDefinition<Settings, Payload> = {
         payload.traits.name
       )
       const traits = {
-        ...omit(payload.traits, ['created', 'email', 'firstName', 'lastName', 'name', 'username', 'phone']),
+        ...omit(payload.traits, [
+          'created',
+          'createdAt',
+          'created_at',
+          'email',
+          'firstName',
+          'lastName',
+          'name',
+          'username',
+          'phone'
+        ]),
         // to fit the Mixpanel expectations, transform the special traits to Mixpanel reserved property
-        $created: payload.traits.created,
+        $created: payload.created,
         $email: payload.traits.email,
         $first_name: payload.traits.firstName,
         $last_name: payload.traits.lastName,

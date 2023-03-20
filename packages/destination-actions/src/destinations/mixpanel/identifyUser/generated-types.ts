@@ -19,4 +19,8 @@ export interface Payload {
   traits?: {
     [k: string]: unknown
   }
+  /**
+   * User creation date
+   */
+  created?: string | number
 }
