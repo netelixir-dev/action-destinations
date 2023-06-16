@@ -52,27 +52,37 @@ export interface DynamicFieldItem {
   value: string
 }
 
-/** The shape of authentication and top-level settings */
-export interface GlobalSetting {
+interface BaseSetting {
   /** A short, human-friendly label for the field */
   label: string
+  /** An optional default value for the field */
+  default?: FieldValue
   /** A human-friendly description of the field */
   description: string
-  /** A subset of the available DestinationMetadataOption types */
-  type: 'boolean' | 'string' | 'password' | 'number'
-  /** Whether or not the field accepts more than one of its `type` */
+  /** Whether or not the field accepts multiple values (an array of `type`) */
   multiple?: boolean
+  required?: boolean
   /**
    * A predefined set of options for the setting.
    * Only relevant for `type: 'string'` or `type: 'number'`.
    */
-  choices?: Array<{
-    /** The value of the option */
-    value: string | number
-    /** A human-friendly label for the option */
-    label: string
-  }>
-  required?: boolean
+  choices?:
+    | Array<string>
+    | Array<{
+        /** The value of the option */
+        value: string | number
+        /** A human-friendly label for the option */
+        label: string
+      }>
+
+  /** Whether or not the field supports dynamically fetching options */
+  dynamic?: boolean
+}
+
+/** The shape of authentication and top-level settings */
+export interface GlobalSetting extends BaseSetting {
+  /** A subset of the available DestinationMetadataOption types */
+  type: 'boolean' | 'string' | 'password' | 'number'
   default?: string | number | boolean
   properties?: InputField['properties']
   format?: InputField['format']
@@ -91,39 +101,18 @@ export type FieldTypeName =
   | 'hidden'
 
 /** The shape of an input field definition */
-export interface InputField {
-  /** A short, human-friendly label for the field */
-  label: string
-  /** A human-friendly description of the field */
-  description: string
+export interface InputField extends BaseSetting {
   /** The data type for the field */
   type: FieldTypeName
   /** Whether null is allowed or not */
   allowNull?: boolean
-  /** Whether or not the field accepts multiple values (an array of `type`) */
-  multiple?: boolean
+
   /** Whether or not the field accepts properties not defined by the builder */
   additionalProperties?: boolean
-  /** An optional default value for the field */
-  default?: FieldValue
+
   /** A placeholder display value that suggests what to input */
   placeholder?: string
-  /** Whether or not the field supports dynamically fetching options */
-  dynamic?: boolean
-  /**
-   * A predefined set of options for the setting.
-   * Only relevant for `type: 'string'` or `type: 'number'`.
-   */
-  choices?:
-    | Array<string>
-    | Array<{
-        /** The value of the option */
-        value: string | number
-        /** A human-friendly label for the option */
-        label: string
-      }>
-  /** Whether or not the field is required */
-  required?: boolean
+
   /**
    * Optional definition for the properties of `type: 'object'` fields
    * (also arrays of objects when using `multiple: true`)
