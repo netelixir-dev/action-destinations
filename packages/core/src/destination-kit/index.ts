@@ -8,7 +8,15 @@ import { fieldsToJsonSchema, MinimalInputField } from './fields-to-jsonschema'
 import createRequestClient, { RequestClient, ResponseError } from '../create-request-client'
 import { validateSchema } from '../schema-validation'
 import type { ModifiedResponse } from '../types'
-import type { GlobalSetting, RequestExtension, ExecuteInput, Result, Deletion, DeletionPayload } from './types'
+import type {
+  DynamicFieldResponse,
+  GlobalSetting,
+  RequestExtension,
+  ExecuteInput,
+  Result,
+  Deletion,
+  DeletionPayload
+} from './types'
 import type { AllRequestOptions } from '../request-client'
 import { ErrorCodes, IntegrationError, InvalidAuthenticationError } from '../errors'
 import { AuthTokens, getAuthData, getOAuth2Data, updateOAuthSettings } from './parse-settings'
@@ -118,6 +126,11 @@ interface Authentication<Settings> {
   scheme: 'basic' | 'custom' | 'oauth2' | 'oauth-managed'
   /** The fields related to authentication */
   fields: Record<string, GlobalSetting>
+  /** Dynamic Fields */
+  dynamicFields?: {
+    [K in keyof Settings]?: RequestFn<Settings, {}, DynamicFieldResponse>
+  }
+
   /** A function that validates the user's authentication inputs. It is highly encouraged to define this whenever possible. */
   testAuthentication?: (request: RequestClient, input: AuthSettings<Settings>) => Promise<unknown> | unknown
 }
