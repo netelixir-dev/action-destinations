@@ -1,9 +1,8 @@
 import type { DestinationDefinition } from '@segment/actions-core'
 import type { Settings } from './generated-types'
-
 import syncEngage from './syncEngage'
-
 import syncRetl from './syncRetl'
+import createAudience from './createAudience'
 
 const destination: DestinationDefinition<Settings> = {
   name: 'Facebook Custom Audiences (Actions)',
@@ -26,7 +25,8 @@ const destination: DestinationDefinition<Settings> = {
   },
   actions: {
     syncEngage,
-    syncRetl
+    syncRetl,
+    createAudience
   }
 }
 
