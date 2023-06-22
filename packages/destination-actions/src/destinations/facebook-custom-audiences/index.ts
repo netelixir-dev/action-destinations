@@ -17,6 +17,12 @@ const destination: DestinationDefinition<Settings> = {
         label: 'Placeholder',
         description: 'Placeholder',
         type: 'string'
+      },
+      adAccountID: {
+        label: 'Ad Account ID',
+        description: 'Ad Account ID',
+        type: 'string',
+        required: true
       }
     },
     refreshAccessToken: async () => {
