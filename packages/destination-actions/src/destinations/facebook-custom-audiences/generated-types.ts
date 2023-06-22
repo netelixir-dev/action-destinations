@@ -5,4 +5,8 @@ export interface Settings {
    * Placeholder
    */
   placeholder?: string
+  /**
+   * Ad Account ID
+   */
+  adAccountID: string
 }

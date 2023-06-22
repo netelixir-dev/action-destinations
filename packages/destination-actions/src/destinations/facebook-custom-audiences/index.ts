@@ -22,7 +22,20 @@ const destination: DestinationDefinition<Settings> = {
         label: 'Ad Account ID',
         description: 'Ad Account ID',
         type: 'string',
-        required: true
+        required: true,
+        dynamic: true
+      }
+    },
+    dynamicFields: {
+      adAccountID: async (_request) => {
+        return {
+          choices: [
+            {
+              label: 'Test Label',
+              value: 'Test_Value'
+            }
+          ]
+        }
       }
     },
     refreshAccessToken: async () => {
