@@ -432,6 +432,7 @@ export function getOptions(
       tags,
       default: schema.default ?? defaultValues[schema.type],
       description: schema.description,
+      dynamic: schema.dynamic ?? false,
       encrypt: schema.type === 'password',
       hidden: existing['hidden'] ?? false,
       label: schema.label,

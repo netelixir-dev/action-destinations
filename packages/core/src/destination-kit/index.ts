@@ -464,6 +464,13 @@ export class Destination<Settings = JSONObject> {
     return [{ output: 'successfully processed batch of events' }]
   }
 
+  async executeDynamicSetting(field: string, data: ExecuteDynamicFieldInput<Settings, {}>): Promise<DynamicFieldResponse> {
+    const fn = this.definition.authentication?.dynamicFields?.[field]
+    if (typeof fn !== 'function') {
+      throw new IntegrationError(`Dynamic field ${field} is not defined`, 'InvalidDynamicField', 400)
+    }
+  }
+
   public async executeDynamicField(
     actionSlug: string,
     fieldKey: string,
