@@ -7,12 +7,27 @@ const action: ActionDefinition<Settings, Payload> = {
   description: 'Send order completion event',
   defaultSubscription: 'type = "track" and event = "Order Completed"',
   fields: {
-    user_id: {
-      label: 'User ID',
-      description: 'NetElixer User ID',
+    checkout_id: {
+      label: 'Checkot ID',
+      description: 'Checkout ID generated before Order Completion',
+      type: 'string',
+      required: false
+    },
+    order_id: {
+      label: 'Order ID',
+      description: 'Unique ID of the order',
       type: 'string',
       required: true,
       default: {
+        '@template': '{{properties.order_id}}'
+      }
+    },
+    user_id: {
+      label: 'User ID',
+      description: 'User ID created by the Business',
+      type: 'string',
+      required: true,
+      default: {  // TODO: If User ID is not available pass anonymus ID here
         '@template': '{{userId}}'
       }
     },
@@ -22,25 +37,16 @@ const action: ActionDefinition<Settings, Payload> = {
       type: 'number',
       required: true,
       default: {
-        '@template': '{{properties.revenue}}'
+        '@template': '{{properties.revenue}}' // TODO: is it going to be props.revenue or props.total?
       }
     },
-    products: {
-      label: 'Products',
-      description: 'List of product details in the order',
-      type: 'object',
+    tax: {
+      label: 'Tax',
+      description: 'Total tax associated with the transaction',
+      type: 'number',
       required: false,
       default: {
-        '@template': '{{properties.products}}'
-      }
-    },
-    currency: {
-      label: 'Currency',
-      description: 'Currency of the order (e.g. USD)',
-      type: 'string',
-      required: false,
-      default: {
-        '@template': '{{properties.currency}}'
+        '@template': '{{properties.tax}}'
       }
     },
     shipping: {
@@ -52,29 +58,47 @@ const action: ActionDefinition<Settings, Payload> = {
         '@template': '{{properties.shipping}}'
       }
     },
-    order_id: {
-      label: 'Order ID',
-      description: 'Unique ID of the order',
-      type: 'string',
-      required: true,
+    discount: {
+      label: 'Discount',
+      description: 'Total discount associated with the transaction',
+      type: 'number',
+      required: false,
       default: {
-        '@template': '{{properties.order_id}}'
+        '@template': '{{properties.discount}}'
       }
     },
-    anonymous_id: {
-      label: 'Anonymous ID',
-      description: 'Identifier for anonymous user',
+    coupon: {
+      label: 'Coupon',
+      description: 'Transaction coupon redeemed with the transaction',
       type: 'string',
       required: false,
       default: {
-        '@template': '{{anonymousId}}'
+        '@template': '{{properties.coupon}}'
+      }
+    },
+    currency: {
+      label: 'Currency',
+      description: 'Currency of the order (e.g. USD)',
+      type: 'string',
+      required: false,
+      default: {
+        '@template': '{{properties.currency}}'
+      }
+    },
+    products: {
+      label: 'Products',
+      description: 'List of product details in the order',
+      type: 'object',
+      required: false,
+      default: {
+        '@template': '{{properties.products}}'
       }
     },
     email: {
       label: 'Email address',
-      description: 'The user&#39;s email address',
+      description: 'Email address of the customer',
       type: 'string',
-      required: true,
+      required: false,
       default: {
         '@if': {
           else: { '@path': '$.properties.email' },
